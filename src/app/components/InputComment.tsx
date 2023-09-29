@@ -3,24 +3,23 @@ import React from 'react'
 
 const InputComment = ({ profile }: { profile: string }) => {
   return (
-    <div className='flex flex-col gap-4 p-4 bg-white rounded-md'>
+    <div className='grid p-4 bg-white rounded-md grid-cols-12 grid-rows-3 items-center gap-y-4 lg:gap-x-4'>
       <textarea
         name='comment'
-        className='border-lightGrey border rounded-lg p-4 resize-none'
+        className='border-lightGrey border rounded-lg p-4 resize-none col-span-12 row-span-2 lg:row-start-1 lg:col-start-2'
         placeholder='Add a comment...'
         rows={3}
       ></textarea>
-      <div className='flex justify-between items-center'>
-        <Image
-          alt='profile photo'
-          src={profile.substring(1)}
-          width={32}
-          height={32}
-        />
-        <button className='bg-primary text-white rounded-lg py-3 px-8'>
-          SEND
-        </button>
-      </div>
+      <Image
+        alt='profile photo'
+        src={profile.substring(1)}
+        width={32}
+        height={32}
+        className='col-span-2 lg:row-start-1 lg:col-start-1'
+      />
+      <button className='bg-primary text-white rounded-lg py-3 px-8 col-span-4 h-12 col-start-9 lg:row-start-1 lg:col-span-2'>
+        SEND
+      </button>
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { Reply } from '../models/reply'
 
 const Reply = ({ ...props }: Reply) => {
   return (
-    <div className='pl-4'>
+    <div className='pl-4 lg:pl-10'>
       <CommentComponent isReply {...props} replies={null} />
     </div>
   )
