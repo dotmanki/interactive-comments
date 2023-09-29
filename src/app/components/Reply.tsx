@@ -1,5 +1,5 @@
 import React from 'react'
-import CommentComponent from './Comment'
+import CommentComponent from './Comment/Comment'
 import { Reply } from '../models/reply'
 
 const Reply = ({ ...props }: Reply) => {

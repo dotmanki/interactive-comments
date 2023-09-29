@@ -1,5 +1,5 @@
 import { Payload } from './api/route'
-import Comment from './components/Comment'
+import Comment from './components/Comment/Comment'
 import InputComment from './components/InputComment'
 
 export default async function Home() {
