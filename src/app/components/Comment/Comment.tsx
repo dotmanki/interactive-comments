@@ -1,15 +1,14 @@
-import React from 'react'
+'use client'
+import React, { useContext } from 'react'
 import { Comment } from '../../models/comment'
-import Image from 'next/image'
-import iconReply from '@public/images/icon-reply.svg'
 import Reply from '../Reply'
 import Score from '../Score'
-import iconDelete from '@public/images/icon-delete.svg'
-import iconEdit from '@public/images/icon-edit.svg'
 import CommentHeader from './CommentHeader'
 import CommentContent from './CommentContent'
 import ReplyComponent from './Reply'
 import EditComment from './EditComment'
+import { AuthContext } from '@/app/context/AuthContext'
+import InputReply from './InputReply'
 
 interface Props extends Comment {
   isReply?: boolean
@@ -25,7 +24,9 @@ const CommentComponent = ({
   isReply = false,
   replyingTo,
 }: Props) => {
-  const isYourComment = user.username === 'juliusomo'
+  const authContext = useContext(AuthContext)
+  const isYourComment = authContext.currentUser?.username === user.username
+  const [isReplying, setIsReplying] = React.useState(false)
   return (
     <>
       <div className='grid grid-cols-12 gap-y-4 items-center p-4 bg-white rounded-md lg:p-6 lg:gap-y-6'>
@@ -48,7 +49,14 @@ const CommentComponent = ({
           <Score score={score} />
         </div>
 
-        {!isYourComment ? <ReplyComponent /> : <EditComment />}
+        {!isYourComment ? (
+          <ReplyComponent
+            isEnabled={!isReplying}
+            onClick={() => setIsReplying(!isReplying)}
+          />
+        ) : (
+          <EditComment />
+        )}
       </div>
       {!!replies && replies.length > 0 && (
         <div className='border-transparent border-l-lightGrey border-l-2 flex flex-col gap-4 lg:ml-10'>
@@ -56,6 +64,12 @@ const CommentComponent = ({
             <Reply key={reply.id} {...reply} />
           ))}
         </div>
+      )}
+      {isReplying && (
+        <InputReply
+          onBlur={() => setIsReplying(false)}
+          replyingTo={user.username}
+        />
       )}
     </>
   )

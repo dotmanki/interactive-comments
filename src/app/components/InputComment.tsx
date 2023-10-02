@@ -1,9 +1,12 @@
+'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../context/AuthContext'
 
-const InputComment = ({ profile }: { profile: string }) => {
+const InputComment = () => {
+  const profile = useContext(AuthContext).currentUser?.image.webp!
   return (
-    <div className='grid p-4 bg-white rounded-md grid-cols-12 grid-rows-3 items-center gap-y-4 lg:gap-x-4'>
+    <div className='grid p-4 bg-white rounded-md grid-cols-12 grid-rows-2 items-center gap-y-4 lg:gap-x-4'>
       <textarea
         name='comment'
         className='border-lightGrey border rounded-lg p-4 resize-none col-span-12 row-span-2 lg:row-start-1 lg:col-start-2'
