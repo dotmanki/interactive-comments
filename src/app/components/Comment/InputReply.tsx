@@ -1,5 +1,5 @@
 'use client'
-import { AuthContext } from '@/app/context/AuthContext'
+import { useAuth } from '@/app/context/AuthContext'
 import Image from 'next/image'
 import React, { useContext } from 'react'
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const InputReply = ({ onBlur, replyingTo }: Props) => {
-  const profile = useContext(AuthContext).currentUser?.image.webp!
+  const profile = useAuth().currentUser?.image.webp!
   const [isFocused, setIsFocused] = React.useState(true)
 
   const handleBlur = (e: React.FocusEvent) => {

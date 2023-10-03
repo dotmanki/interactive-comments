@@ -7,8 +7,8 @@ import CommentHeader from './CommentHeader'
 import CommentContent from './CommentContent'
 import ReplyComponent from './Reply'
 import EditComment from './EditComment'
-import { AuthContext } from '@/app/context/AuthContext'
 import InputReply from './InputReply'
+import { useAuth } from '@/app/context/AuthContext'
 
 interface Props extends Comment {
   isReply?: boolean
@@ -24,8 +24,7 @@ const CommentComponent = ({
   isReply = false,
   replyingTo,
 }: Props) => {
-  const authContext = useContext(AuthContext)
-  const isYourComment = authContext.currentUser?.username === user.username
+  const isYourComment = useAuth().currentUser?.username === user.username
   const [isReplying, setIsReplying] = React.useState(false)
   return (
     <>

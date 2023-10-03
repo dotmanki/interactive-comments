@@ -1,20 +1,18 @@
-import { Payload } from './api/route'
+'use client'
+import { Payload } from './api/comments/route'
 import Comment from './components/Comment/Comment'
 import InputComment from './components/InputComment'
-import UserContainer from './components/UserContainer'
+import { useComment } from './context/CommentContext'
 
-export default async function Home() {
-  const data = await fetch(`${process.env.URL}/api`, { cache: 'no-cache' })
-  const res: Payload = await data.json()
+export default function Home() {
+  const { comments } = useComment()
   return (
     <main className='p-4 pt-8 bg-veryLightGrey h-full lg:flex lg:justify-center lg:items-center'>
       <div className='w-full h-full flex flex-col gap-4 lg:w-1/2'>
-        <UserContainer value={res.currentUser}>
-          {res.comments.map((comment) => (
-            <Comment key={comment.id} {...comment} />
-          ))}
-          <InputComment />
-        </UserContainer>
+        {comments.map((comment) => (
+          <Comment key={comment.id} {...comment} />
+        ))}
+        <InputComment />
       </div>
     </main>
   )
