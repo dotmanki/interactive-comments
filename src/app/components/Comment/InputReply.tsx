@@ -13,7 +13,7 @@ interface Props {
 }
 
 const InputReply = ({ onBlur, replyingTo, isAReply, commentId }: Props) => {
-  const profile = useAuth().currentUser?.image.webp!
+  const profile = useAuth().currentUser?.image.png!
   const { comments, updateComment, findComment } = useComment()
   const { reply: currentReply, instantiate } = useInstantiate()
   const [states, dispatch] = React.useState({
