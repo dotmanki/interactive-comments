@@ -25,7 +25,7 @@ const InputComment = () => {
       setIsLoading(false)
     }
   }, [submitComment, reset, comment])
-  const profile = useAuth().currentUser?.image.webp
+  const profile = useAuth().currentUser?.image.png
   return (
     <div className='grid p-4 bg-white rounded-md grid-cols-12 grid-rows-2 items-center gap-y-4 lg:gap-x-4'>
       <textarea
