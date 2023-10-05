@@ -3,19 +3,24 @@
 import { createContext, useContext, useEffect } from 'react'
 import { Comment } from '../models/comment'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { Reply } from '../models/reply'
 
 interface CommentContextProps {
   comments: Comment[]
-  createComment: (comment: Comment) => void
+  submitComment: (comment: Comment) => void
   updateComment: (comment: Comment) => void
-  deleteComment: (comment: Comment) => void
+  deleteComment: (id: number) => void
+  findComment: (id: number, isAReply: boolean) => Comment | undefined
+  index: number
 }
 
 const CommentContext = createContext<CommentContextProps>({
   comments: [],
-  createComment: () => {},
+  submitComment: () => {},
   updateComment: () => {},
   deleteComment: () => {},
+  findComment: () => undefined,
+  index: 0,
 })
 
 export const useComment = () => {
@@ -34,6 +39,12 @@ export const CommentProvider = ({
     'comments',
     [],
   )
+  // static id for testing purposes
+  const { state: index, setState: setIndex } = useLocalStorage<number>(
+    'index',
+    4,
+  )
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -49,23 +60,65 @@ export const CommentProvider = ({
     fetchComments()
   }, [setComments])
 
-  const createComment = (comment: Comment) => {
+  const submitComment = (comment: Comment) => {
     setComments([...comments, comment])
+    setIndex(index + 1)
   }
 
-  const updateComment = (comment: Comment) => {
-    setComments([...comments.filter((c) => c.id !== comment.id), comment])
+  const updateComment = (comment: Comment | Reply) => {
+    if ('replyingTo' in comment) {
+      setComments([
+        ...comments.filter(
+          (c) => c.replies?.filter((r) => r.id !== comment.id),
+        ),
+      ])
+    } else {
+      setComments([...comments.filter((c) => c.id !== comment.id), comment])
+    }
   }
 
-  const deleteComment = (comment: Comment) => {
-    setComments([...comments.filter((c) => c.id !== comment.id)])
+  const deleteComment = (id: number) => {
+    setComments([
+      ...comments.filter((c) => {
+        if (c.replies) {
+          const filteredReplies = c.replies.filter((r) => {
+            return r.id !== id
+          })
+          c.replies = filteredReplies
+        }
+        return c.id !== id
+      }),
+    ])
   }
+
+  const findComment = (id: number, isAReply: boolean) =>
+    isAReply
+      ? comments.find(
+          (c) =>
+            c.replies?.find((r) => {
+              return r.id === id
+            }),
+        )
+      : comments.find((c) => {
+          return c.id === id
+        })
 
   return (
     <CommentContext.Provider
-      value={{ comments, createComment, deleteComment, updateComment }}
+      value={{
+        comments,
+        submitComment,
+        deleteComment,
+        updateComment,
+        findComment,
+        index,
+      }}
     >
       {children}
     </CommentContext.Provider>
   )
 }
+
+/* const isReply = (x: any): x is Reply => {
+  return 'replyingTo' in x
+} */
